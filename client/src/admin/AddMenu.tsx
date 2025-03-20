@@ -17,7 +17,8 @@ import EditMenu from "./EditMenu";
 
 const AddMenu = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const [selectedMenu, setSelectedMenu] = useState<any>();
+  const [selectedMenu, setSelectedMenu] = useState<any>(null);
+  const [editOpen, setEditopen] = useState<boolean>(false);
   const loading = false;
 
   const menuItems = [
@@ -40,7 +41,7 @@ const AddMenu = () => {
         "https://c4.wallpaperflare.com/wallpaper/924/189/172/cuisine-food-india-indian-wallpaper-preview.jpg",
     },
   ];
-  const [input, setinput] = useState<any>({
+  const [input, setInput] = useState<any>({
     name: "",
     description: "",
     price: 0,
@@ -48,7 +49,7 @@ const AddMenu = () => {
   });
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
-    setinput((prevInput: any) => ({
+    setInput((prevInput: any) => ({
       ...prevInput,
       [name]: type === "number" ? parseFloat(value) : value,
     }));
@@ -112,7 +113,7 @@ const AddMenu = () => {
                   type="file"
                   name="image"
                   onChange={(e) =>
-                    setinput((prevInput: any) => ({
+                    setInput((prevInput: any) => ({
                       ...prevInput,
                       image: e.target.files ? e.target.files[0] : undefined,
                     }))
@@ -159,7 +160,10 @@ const AddMenu = () => {
               </h2>
             </div>
             <Button
-              onClick={() => setSelectedMenu(menuItems)}
+              onClick={() => {
+                setSelectedMenu(menuItems);
+                setEditopen(true);
+              }}
               size={"sm"}
               className="bg-orange-400 hover:bg-orange-500 "
             >
@@ -168,7 +172,11 @@ const AddMenu = () => {
           </div>
         ))}
       </div>
-      <EditMenu setSelectedMenu={setSelectedMenu} />
+      <EditMenu
+        editOpen={editOpen}
+        selectedMenu={selectedMenu}
+        setEditopen={setEditopen}
+      />
     </div>
   );
 };

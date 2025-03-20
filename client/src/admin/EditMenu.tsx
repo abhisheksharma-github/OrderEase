@@ -1,96 +1,59 @@
-// Removed unused import for Button
-// Removed unused imports
-// Removed unused import for Input
-// Removed unused import for Label
-
-import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogTitle,
   DialogDescription,
-} from "@radix-ui/react-dialog"; // Replace with the correct library or file path if different
-import { Label } from "@/components/ui/label";
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
+import { Dispatch, SetStateAction, FormEvent, useEffect } from "react";
+import { useState } from "react";
 
-const EditMenu = () => {
-  const [editOpen, setEditOpen] = useState(false); // Added state for editOpen
-  const [input, setInput] = useState({
+type EditMenuProps = {
+  editOpen: boolean;
+  setEditopen: Dispatch<SetStateAction<boolean>>;
+  selectedMenu: any; // Change `any` to the proper type of your menu item
+};
+const EditMenu = ({ editOpen, setEditopen, selectedMenu }: EditMenuProps) => {
+  const [input, setInput] = useState<any>({
     name: "",
     description: "",
-    price: "",
-    image: undefined as File | undefined,
+    price: 0,
+    image: undefined,
   });
-
-  const [loading, setLoading] = useState(false);
-
-  const [error] = useState<{
-    name?: string;
-    description?: string;
-    price?: string;
-    image?: File;
-  }>({});
+  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
 
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setInput((prevInput) => ({ ...prevInput, [name]: value }));
+    setInput((prevInput: any) => ({
+      ...prevInput,
+      [name]: name === "price" ? parseFloat(value) : value,
+    }));
   };
-
-  const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-
-    try {
-      // Validate input fields
-      if (!input.name || !input.description || !input.price || !input.image) {
-        alert("All fields are required.");
-        setLoading(false);
-        return;
-      }
-
-      // Create form data for file upload
-      const formData = new FormData();
-      formData.append("name", input.name);
-      formData.append("description", input.description);
-      formData.append("price", input.price);
-      formData.append("image", input.image);
-
-      // Simulate API call
-      const response = await fetch("/api/menu", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update menu.");
-      }
-
-      alert("Menu updated successfully!");
-      setInput({
-        name: "",
-        description: "",
-        price: "",
-        image: undefined,
-      });
-    } catch (error) {
-      console.error(error);
-      alert("An error occurred while updating the menu.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  useEffect(() => {
+    setInput({
+      name: selectedMenu.name,
+      description: selectedMenu.description,
+      price: selectedMenu.price,
+      image: undefined,
+    });
+  }, []);
+  const loading = false;
   return (
-    <Dialog open={editOpen} onOpenChange={setEditOpen}>
+    <Dialog open={editOpen} onOpenChange={setEditopen}>
       <DialogContent>
-        <div className="dialog-header">
+        <DialogHeader>
           <DialogTitle>Edit Menu</DialogTitle>
           <DialogDescription>
-            Update your menu to keep your offerings fresh and exciting!
+            Update Your Menu here! Keep your offering fresh and exciting.
           </DialogDescription>
-        </div>
+        </DialogHeader>
         <form onSubmit={submitHandler} className="space-y-4">
           <div>
             <Label>Name</Label>
@@ -98,29 +61,19 @@ const EditMenu = () => {
               type="text"
               name="name"
               value={input.name}
+              placeholder="Enter Menu Name"
               onChange={changeEventHandler}
-              placeholder="Enter menu name"
             />
-            {error && (
-              <span className="text-xs font-medium text-red-600">
-                {error.name}
-              </span>
-            )}
           </div>
           <div>
             <Label>Description</Label>
             <Input
               type="text"
               name="description"
+              placeholder="Enter menu description"
               value={input.description}
               onChange={changeEventHandler}
-              placeholder="Enter menu description"
             />
-            {error && (
-              <span className="text-xs font-medium text-red-600">
-                {error.description}
-              </span>
-            )}
           </div>
           <div>
             <Label>Price in (Rupees)</Label>
@@ -128,14 +81,9 @@ const EditMenu = () => {
               type="number"
               name="price"
               value={input.price}
+              placeholder="Enter Menu price"
               onChange={changeEventHandler}
-              placeholder="Enter menu price"
             />
-            {error && (
-              <span className="text-xs font-medium text-red-600">
-                {error.price}
-              </span>
-            )}
           </div>
           <div>
             <Label>Upload Menu Image</Label>
@@ -143,25 +91,25 @@ const EditMenu = () => {
               type="file"
               name="image"
               onChange={(e) =>
-                setInput({ ...input, image: e.target.files?.[0] || undefined })
+                setInput((prevInput: any) => ({
+                  ...prevInput,
+                  image: e.target.files ? e.target.files[0] : undefined,
+                }))
               }
             />
-            {error && (
-              <span className="text-xs font-medium text-red-600">
-                {error.image?.name}
-              </span>
-            )}
           </div>
-          <div className="dialog-footer mt-5">
+          <DialogFooter className="mt-5">
             {loading ? (
-              <Button disabled className="bg-orange hover:bg-hoverOrange">
+              <Button disabled className="bg-orange-400 hover:bg-orange-500">
                 <Loader2 className="mr-2 w-4 h-4 animate-spin" />
-                Please wait
+                Please Wait
               </Button>
             ) : (
-              <Button className="bg-orange hover:bg-hoverOrange">Submit</Button>
+              <Button className="bg-orange-400 hover:bg-orange-500">
+                Submit Here
+              </Button>
             )}
-          </div>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
