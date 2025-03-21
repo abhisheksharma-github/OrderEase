@@ -1,4 +1,4 @@
-// 6:40 min se start karna ha firse
+// 7:00:33 min se start karna ha firse
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,11 +14,13 @@ import { Label } from "@/components/ui/label";
 import { Loader2, Plus } from "lucide-react";
 import { FormEvent, useState } from "react";
 import EditMenu from "./EditMenu";
+import { MenuFormSchema, menuSchema } from "@/schema/menuSchema";
 
 const AddMenu = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const [selectedMenu, setSelectedMenu] = useState<any>(null);
+  const [selectedMenu, setSelectedMenu] = useState<any>();
   const [editOpen, setEditopen] = useState<boolean>(false);
+  const [error, setError] = useState<Partial<MenuFormSchema>>();
   const loading = false;
 
   const menuItems = [
@@ -26,22 +28,22 @@ const AddMenu = () => {
       id: 1,
       name: "Butter Paneer Masala",
       description:
-        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Excepturi laudantium illo hic in at. Sed!",
+        "Creamy, spiced cottage cheese curry with rich tomato gravy.",
       price: 280,
       image:
-        "https://c4.wallpaperflare.com/wallpaper/924/189/172/cuisine-food-india-indian-wallpaper-preview.jpg",
+        "https://madscookhouse.com/wp-content/uploads/2020/10/Paneer-Butter-Masala-Nut-Free-500x375.jpg",
     },
     {
       id: 2,
-      name: "Butter Paneer Masala",
+      name: "Butter Chicken ",
       description:
-        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Excepturi laudantium illo hic in at. Sed!",
-      price: 280,
+        "Tender chicken in buttery, creamy, and flavorful tomato sauce.",
+      price: 380,
       image:
-        "https://c4.wallpaperflare.com/wallpaper/924/189/172/cuisine-food-india-indian-wallpaper-preview.jpg",
+        "https://masalaandchai.com/wp-content/uploads/2022/03/Butter-Chicken.jpg",
     },
   ];
-  const [input, setInput] = useState<any>({
+  const [input, setInput] = useState<MenuFormSchema>({
     name: "",
     description: "",
     price: 0,
@@ -54,10 +56,18 @@ const AddMenu = () => {
       [name]: type === "number" ? parseFloat(value) : value,
     }));
   };
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(input);
+    const result = menuSchema.safeParse(input);
+    if (!result.success) {
+      const fieldErrors = result.error.formErrors.fieldErrors;
+      setError(fieldErrors as Partial<MenuFormSchema>);
+      return;
+    }
+
+    // api ka kaam start from here
   };
+
   return (
     <div className="max-w-6xl mx-auto my-12">
       <div className="flex justify-between items-center">
@@ -86,6 +96,11 @@ const AddMenu = () => {
                   placeholder="Enter Menu Name"
                   onChange={changeEventHandler}
                 />
+                {error && (
+                  <span className="text-xs font-medium text-red-600">
+                    {error.name}
+                  </span>
+                )}
               </div>
               <div>
                 <Label>Description</Label>
@@ -96,6 +111,11 @@ const AddMenu = () => {
                   value={input.description}
                   onChange={changeEventHandler}
                 />
+                {error && (
+                  <span className="text-xs font-medium text-red-600">
+                    {error.description}
+                  </span>
+                )}
               </div>
               <div>
                 <Label>Price in (Rupees)</Label>
@@ -106,6 +126,11 @@ const AddMenu = () => {
                   placeholder="Enter Menu price"
                   onChange={changeEventHandler}
                 />
+                {error && (
+                  <span className="text-xs font-medium text-red-600">
+                    {error.price}
+                  </span>
+                )}
               </div>
               <div>
                 <Label>Upload Menu Image</Label>
@@ -119,6 +144,11 @@ const AddMenu = () => {
                     }))
                   }
                 />
+                {error && (
+                  <span className="text-xs font-medium text-red-600">
+                    {error.image?.name || "Image is Required"}
+                  </span>
+                )}
               </div>
               <DialogFooter className="mt-5">
                 {loading ? (

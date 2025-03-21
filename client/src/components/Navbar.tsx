@@ -105,18 +105,10 @@ const Navbar = () => {
                 </MenubarItem>
                 <MenubarItem>
                   <Link
-                    to="/admin/order"
+                    to="admin/orders"
                     className="text-black dark:text-white hover:text-orange-500 block mb-2"
                   >
                     Orders
-                  </Link>
-                </MenubarItem>
-                <MenubarItem>
-                  <Link
-                    to="/admin/Table"
-                    className="text-black dark:text-white hover:text-orange-500 block mb-2"
-                  >
-                    TableNumber
                   </Link>
                 </MenubarItem>
               </MenubarContent>
@@ -245,21 +237,21 @@ const MobileNavbar = ({ setTheme }: MobileNavbarProps) => {
             <span>Cart (0)</span>
           </Link>
           <Link
-            to="/Menu"
+            to="/admin/menu"
             className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-700  text-gray-500 font-medium"
           >
             <SquareMenu />
             <span>Menu</span>
           </Link>
           <Link
-            to="/Restaurant"
+            to="/admin/restaurant"
             className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-700  text-gray-500  font-medium"
           >
             <Utensils />
             <span> Restaurant </span>
           </Link>
           <Link
-            to="/Restaurant Order"
+            to="/admin/orders"
             className="flex items-center gap-4 hover:bg-gray-200 px-3 py-2 rounded-lg cursor-pointer hover:text-gray-700  text-gray-500 font-medium"
           >
             <PackageIcon />

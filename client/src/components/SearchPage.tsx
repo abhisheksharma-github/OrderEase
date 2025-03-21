@@ -7,7 +7,6 @@ import { Badge } from "./ui/badge";
 import { Globe, MapPin, X } from "lucide-react";
 import { Card, CardContent, CardFooter } from "./ui/Card";
 import { AspectRatio } from "./ui/aspect-ratio";
-import HeroImage from "@/assets/momos.jpeg";
 
 const restaurantData = [
   {
@@ -15,21 +14,24 @@ const restaurantData = [
     city: "Delhi",
     country: "India",
     cuisines: ["Veg Thali", "Paneer", "Dal Makhani"],
-    image: HeroImage,
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2i8H4SZ_2akoaMAZEmBP_4dKMA3TZpIVUFA&s",
   },
   {
-    name: "Urban Pizza",
-    city: "Noida",
-    country: "India",
+    name: "Pizza",
+    city: "Roma",
+    country: "Italy",
     cuisines: ["Pizza", "Pasta", "Garlic Bread"],
-    image: HeroImage,
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFb-QOETAw_2smnhPtCqsh8A1KTeBnpYEBTQ&s",
   },
   {
-    name: "Khalo",
-    city: "Gurgaon",
-    country: "India",
-    cuisines: ["Biryani", "Chicken Tikka", "Mutton Curry"],
-    image: HeroImage,
+    name: "KhaloOnly",
+    city: "New York City",
+    country: "USA",
+    cuisines: ["Samosa", "Chicken Tikka", "Naan"],
+    image:
+      "https://masalaandchai.com/wp-content/uploads/2022/03/Butter-Chicken.jpg",
   },
 ];
 

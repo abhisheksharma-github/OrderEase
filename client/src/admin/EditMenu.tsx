@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { MenuFormSchema, menuSchema } from "@/schema/menuSchema";
 import { Loader2 } from "lucide-react";
 import { Dispatch, SetStateAction, FormEvent, useEffect } from "react";
 import { useState } from "react";
@@ -16,10 +17,10 @@ import { useState } from "react";
 type EditMenuProps = {
   editOpen: boolean;
   setEditopen: Dispatch<SetStateAction<boolean>>;
-  selectedMenu: any; // Change `any` to the proper type of your menu item
+  selectedMenu: MenuFormSchema; // Change `any` to the proper type of your menu item
 };
 const EditMenu = ({ editOpen, setEditopen, selectedMenu }: EditMenuProps) => {
-  const [input, setInput] = useState<any>({
+  const [input, setInput] = useState<MenuFormSchema>({
     name: "",
     description: "",
     price: 0,
@@ -27,6 +28,14 @@ const EditMenu = ({ editOpen, setEditopen, selectedMenu }: EditMenuProps) => {
   });
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const result = menuSchema.safeParse(input);
+    if (!result.success) {
+      const fieldErrors = result.error.formErrors.fieldErrors;
+      setError(fieldErrors as Partial<MenuFormSchema>);
+      return;
+    }
+
+    // api ka kaam start from here
   };
 
   const changeEventHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,12 +47,13 @@ const EditMenu = ({ editOpen, setEditopen, selectedMenu }: EditMenuProps) => {
   };
   useEffect(() => {
     setInput({
-      name: selectedMenu.name,
-      description: selectedMenu.description,
-      price: selectedMenu.price,
+      name: selectedMenu?.name || "",
+      description: selectedMenu?.description || "",
+      price: selectedMenu?.price || 0,
       image: undefined,
     });
-  }, []);
+  }, [selectedMenu]);
+  const [error, setError] = useState<Partial<MenuFormSchema>>();
   const loading = false;
   return (
     <Dialog open={editOpen} onOpenChange={setEditopen}>
@@ -64,6 +74,11 @@ const EditMenu = ({ editOpen, setEditopen, selectedMenu }: EditMenuProps) => {
               placeholder="Enter Menu Name"
               onChange={changeEventHandler}
             />
+            {error && (
+              <span className="text-xs font-medium text-red-600">
+                {error.name}
+              </span>
+            )}
           </div>
           <div>
             <Label>Description</Label>
@@ -74,6 +89,11 @@ const EditMenu = ({ editOpen, setEditopen, selectedMenu }: EditMenuProps) => {
               value={input.description}
               onChange={changeEventHandler}
             />
+            {error && (
+              <span className="text-xs font-medium text-red-600">
+                {error.description}
+              </span>
+            )}
           </div>
           <div>
             <Label>Price in (Rupees)</Label>
@@ -84,6 +104,11 @@ const EditMenu = ({ editOpen, setEditopen, selectedMenu }: EditMenuProps) => {
               placeholder="Enter Menu price"
               onChange={changeEventHandler}
             />
+            {error && (
+              <span className="text-xs font-medium text-red-600">
+                {error.price}
+              </span>
+            )}
           </div>
           <div>
             <Label>Upload Menu Image</Label>
@@ -97,6 +122,11 @@ const EditMenu = ({ editOpen, setEditopen, selectedMenu }: EditMenuProps) => {
                 }))
               }
             />
+            {error && (
+              <span className="text-xs font-medium text-red-600">
+                {error.image?.name}
+              </span>
+            )}
           </div>
           <DialogFooter className="mt-5">
             {loading ? (
