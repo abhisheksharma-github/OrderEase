@@ -13,7 +13,7 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
     try {
         const token = req.cookies.token;
         if (!token) {
-            return res.status(401).json({
+            return res.status(401).json({   
                 success: false,
                 message: "User not authenticated"
             });

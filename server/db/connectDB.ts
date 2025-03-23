@@ -1,3 +1,5 @@
+// Fg4pOPcYiNOJ8PIU
+
 import mongoose from "mongoose";
 
 const connectDB = async () => {
@@ -11,7 +13,7 @@ const connectDB = async () => {
       socketTimeoutMS: 60000, // 60 seconds socket timeout
     });
 
-    console.log("MongoDB connected successfully");
+    console.log("✅ MongoDB connected successfully");
   } catch (error) {
     console.error("❌ MongoDB connection error:", error);
     process.exit(1);

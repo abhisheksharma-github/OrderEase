@@ -57,7 +57,7 @@ const Profile = () => {
         <div className="flex items-center gap-2">
           <Avatar className="relative md:w-28 md:h-28 w-20 h-20">
             <AvatarImage src={selectedProfilePicture} />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback>Profile Pic</AvatarFallback>
             <input
               type="file"
               className="hidden"
@@ -79,15 +79,15 @@ const Profile = () => {
             onChange={(e) =>
               setProfileData({ ...profileData, fullname: e.target.value })
             }
-            className="font-bold text-2xl outline-none border-none focus-visible: ring-transparent"
+            className="font-bold text-2xl outline-none border-none focus-visible: ring-transparent bg-transparent text-gray-900 dark:text-gray-100"
           />
         </div>
       </div>
       <div className="grid md:grid-cols-4 md:gap-2 gap-3 my-10">
-        <div className="flex items-center gap-4 rounded-sm p-2 bg-gray-500">
-          <Mail className="text-gray-800" />
+        <div className="flex items-center gap-4 rounded-sm p-2 bg-gray-200 dark:bg-gray-700">
+          <Mail className="text-gray-800 dark:text-gray-200" />
           <div className="w-full">
-            <Label>Email</Label>
+            <Label className="text-gray-900 dark:text-gray-100">Email</Label>
             <input
               disabled
               name="email"
@@ -95,49 +95,49 @@ const Profile = () => {
               onChange={(e) =>
                 setProfileData({ ...profileData, email: e.target.value })
               }
-              className="w-full text-gray-600 bg-transparent focus-visible:ring-0 focus-visible:border-transparent outline-none border-none"
+              className="w-full text-gray-600 dark:text-gray-300 bg-transparent focus-visible:ring-0 focus-visible:border-transparent outline-none border-none"
             />
           </div>
         </div>
-        <div className="flex items-center gap-4 rounded-sm p-2 bg-gray-500">
-          <LocateIcon className="text-gray-800" />
+        <div className="flex items-center gap-4 rounded-sm p-2 bg-gray-200 dark:bg-gray-700">
+          <LocateIcon className="text-gray-800 dark:text-gray-200" />
           <div className="w-full">
-            <Label>Address</Label>
+            <Label className="text-gray-900 dark:text-gray-100">Address</Label>
             <input
               name="address"
               value={profileData.address}
               onChange={(e) =>
                 setProfileData({ ...profileData, address: e.target.value })
               }
-              className="w-full text-gray-600 bg-transparent focus-visible:ring-0 focus-visible:border-transparent outline-none border-none"
+              className="w-full text-gray-600 dark:text-gray-300 bg-transparent focus-visible:ring-0 focus-visible:border-transparent outline-none border-none"
             />
           </div>
         </div>
-        <div className="flex items-center gap-4 rounded-sm p-2 bg-gray-500">
-          <MapPin className="text-gray-800" />
+        <div className="flex items-center gap-4 rounded-sm p-2 bg-gray-200 dark:bg-gray-700">
+          <MapPin className="text-gray-800 dark:text-gray-200" />
           <div className="w-full">
-            <Label>City</Label>
+            <Label className="text-gray-900 dark:text-gray-100">City</Label>
             <input
               name="city"
               value={profileData.city}
               onChange={(e) =>
                 setProfileData({ ...profileData, city: e.target.value })
               }
-              className="w-full text-gray-600 bg-transparent focus-visible:ring-0 focus-visible:border-transparent outline-none border-none"
+              className="w-full text-gray-600 dark:text-gray-300 bg-transparent focus-visible:ring-0 focus-visible:border-transparent outline-none border-none"
             />
           </div>
         </div>
-        <div className="flex items-center gap-4 rounded-sm p-2 bg-gray-500">
-          <MapPinnedIcon className="text-gray-800" />
+        <div className="flex items-center gap-4 rounded-sm p-2 bg-gray-200 dark:bg-gray-700">
+          <MapPinnedIcon className="text-gray-800 dark:text-gray-200" />
           <div className="w-full">
-            <Label>Country</Label>
+            <Label className="text-gray-900 dark:text-gray-100">Country</Label>
             <input
               name="country"
               value={profileData.country}
               onChange={(e) =>
                 setProfileData({ ...profileData, country: e.target.value })
               }
-              className="w-full text-gray-600 bg-transparent focus-visible:ring-0 focus-visible:border-transparent outline-none border-none"
+              className="w-full text-gray-600 dark:text-gray-300 bg-transparent focus-visible:ring-0 focus-visible:border-transparent outline-none border-none"
             />
           </div>
         </div>
@@ -150,7 +150,7 @@ const Profile = () => {
           ) : (
             <Button
               type="submit"
-              className=" bg-orange-400 hover:bg-orange-500"
+              className="bg-orange-400 hover:bg-orange-500 text-gray-900 dark:text-gray-100"
             >
               Update
             </Button>
@@ -162,6 +162,7 @@ const Profile = () => {
 };
 
 export default Profile;
+
 async function updateProfile(profileData: {
   fullname: string;
   email: string;
@@ -170,8 +171,6 @@ async function updateProfile(profileData: {
   country: string;
   profilePicture: string;
 }) {
-  // Implement the function to update the profile data
-  // For example, you can send a request to your backend API
   const response = await fetch("/api/updateProfile", {
     method: "POST",
     headers: {
