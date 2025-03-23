@@ -18,7 +18,7 @@ const HeroSection = () => {
           backgroundImage: `url("https://t3.ftcdn.net/jpg/02/97/67/70/360_F_297677001_zX7ZzRq8DObUV5IWTHAIhAae6DuiEQh4.jpg")`,
         }}
       >
-        <div className="md:w-[100%] flex items-center bg-gradient-to-r from-orange-50 via-orange-100 to-orange-200 rounded-lg p-8 shadow-lg">
+        <div className="md:w-[100%] flex items-center bg-gradient-to-r from-orange-50 via-orange-100 to-orange-200 opacity-90 rounded-lg p-8 shadow-lg">
           <div className="flex flex-col gap-8">
             <div className="flex flex-col gap-5">
               <h1 className="font-extrabold md:text-5xl text-4xl text-orange-600 drop-shadow-lg">
@@ -36,9 +36,9 @@ const HeroSection = () => {
                   placeholder="Search restaurant by name, city, food, recipe"
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
-                  className="pl-12 shadow-xl rounded-lg border-2 border-orange-300 focus:ring-2 focus:ring-orange-500"
+                  className="pl-12 shadow-xl rounded-lg border-2 border-orange-300 focus:ring-2 focus:ring-orange-500 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700"
                 />
-                <Search className="text-gray-500 absolute inset-y-2 left-3 w-6 h-6" />
+                <Search className="text-gray-500 dark:text-gray-300 absolute inset-y-2 left-3 w-6 h-6" />
               </div>
               <Button
                 onClick={() => navigate(`/search/${searchText}`)}
@@ -182,6 +182,68 @@ const HeroSection = () => {
               </p>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Why Choose Us Section */}
+      <div className="max-w-7xl mx-auto p-8">
+        <h2 className="text-3xl font-bold mb-6 text-center text-orange-600">
+          Why Choose Us?
+        </h2>
+        <p className="text-gray-500 mb-8 text-center">
+          Discover why thousands of customers trust us for their food cravings.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            {
+              title: "Fast Delivery",
+              icon: "🚚",
+              description:
+                "Get your food delivered hot and fresh in no time with our efficient delivery system.",
+            },
+            {
+              title: "Wide Variety",
+              icon: "🍽️",
+              description:
+                "Choose from a wide range of cuisines and dishes to satisfy your cravings.",
+            },
+            {
+              title: "Quality Assurance",
+              icon: "✅",
+              description:
+                "We ensure the highest quality standards for every meal you order.",
+            },
+          ].map((feature, index) => (
+            <div
+              key={index}
+              className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 text-center"
+            >
+              <div className="text-4xl mb-4">{feature.icon}</div>
+              <h3 className="font-bold text-lg text-orange-600 mb-2">
+                {feature.title}
+              </h3>
+              <p className="text-gray-500">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Add Comment Section */}
+      <div className="max-w-3xl mx-auto p-6">
+        <h2 className="text-2xl font-bold mb-4 text-center text-orange-600">
+          Send Your Feedback!
+        </h2>
+        <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
+          <textarea
+            placeholder="Write your Feedback here..."
+            className="w-full p-3 border border-orange-300 rounded-md focus:ring-1 focus:ring-orange-500 resize-none text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-700"
+            rows={3}
+          ></textarea>
+          <div className="text-right mt-3">
+            <Button className="bg-orange-500 hover:bg-orange-600 text-white font-medium px-4 py-2 rounded-md shadow-md">
+              Submit
+            </Button>
+          </div>
         </div>
       </div>
     </div>
