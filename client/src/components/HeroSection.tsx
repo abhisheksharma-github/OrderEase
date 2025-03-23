@@ -33,7 +33,7 @@ const HeroSection = () => {
               <div className="relative w-full">
                 <Input
                   type="text"
-                  placeholder="Search restaurant by name, city"
+                  placeholder="Search restaurant by name, city, food, recipe"
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
                   className="pl-12 shadow-xl rounded-lg border-2 border-orange-300 focus:ring-2 focus:ring-orange-500"
