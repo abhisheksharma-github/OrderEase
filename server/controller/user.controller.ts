@@ -225,43 +225,24 @@ export const checkAuth = async (req: Request, res: Response): Promise<void> => {
 };
 
 // Ensure the correct path or file exists
-import { AuthenticatedRequest } from 'AuthenticatedRequest';
 
-export const updateProfile = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+
+export const updateProfile = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.id;
-        if (!userId) {
-            res.status(401).json({ success: false, message: "User not authenticated" });
-            return;
-        }
-
         const { fullname, email, address, city, country, profilePicture } = req.body;
-        let updatedData: any = { fullname, email, address, city, country };
 
-        // ✅ Only upload if `profilePicture` exists
-        if (profilePicture) {
-            try {
-                const cloudResponse = await cloudinary.uploader.upload(profilePicture);
-                updatedData.profilePicture = cloudResponse.secure_url;
-            } catch (uploadError) {
-                console.error("Cloudinary Upload Error:", uploadError);
-                res.status(500).json({ message: "Image upload failed" });
-                return;
-            }
-        }
+        // Upload image to Cloudinary
+        const cloudResponse = await cloudinary.uploader.upload(profilePicture);
+        const updatedData = { fullname, email, address, city, country, profilePicture: cloudResponse.secure_url };
 
         const user = await User.findByIdAndUpdate(userId, updatedData, { new: true }).select("-password");
-        if (!user) {
-            res.status(404).json({ success: false, message: "User not found" });
-            return;
-        }
 
         res.status(200).json({
             success: true,
             user,
             message: "Profile updated successfully"
         });
-
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
