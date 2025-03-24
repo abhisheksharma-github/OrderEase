@@ -2,6 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./db/connectDB.js";
 import userRoute from "./routes/user.route.js";
+import restaurantRoute from "./routes/restaurant.route.js";
+import menuRoute from "./routes/menu.route.js";
+import orderRoute from "./routes/order.route.js";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -24,6 +27,10 @@ app.use(cors(corsOptions));
 
 // Use userRoute as middleware API
 app.use("/api/v1/user", userRoute);
+app.use("/api/v1/restaurant", restaurantRoute);
+app.use("/api/v1/menu", menuRoute);
+app.use("/api/v1/order", orderRoute);
+
 // http://localhost:8000/api/v1/users/signup
 
 const PORT = process.env.PORT || 3000;

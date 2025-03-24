@@ -4,22 +4,17 @@ import {
   Loader2,
   LockKeyhole,
   Mail,
-  PhoneCallIcon,
+  PhoneOutgoing,
   User,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Link, useNavigate } from "react-router-dom";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { SignupInputState, signupSchema } from "@/schema/userSchema";
-
-// type SignupInputState = {
-//   fullname: string;
-//   email: string;
-//   password: string;
-//   confirmPassword: string;
-//   contact: string;
-// };
+import { useUserStore } from "@/store/useUserStore";
+import { toast } from "sonner"; // ✅ Ensure toast notifications
 
 const Signup = () => {
   const [input, setInput] = useState<SignupInputState>({
@@ -31,19 +26,36 @@ const Signup = () => {
   });
 
   const [errors, setErrors] = useState<Partial<SignupInputState>>({});
+  const { signup, loading } = useUserStore(); // ✅ Ensure useUserStore() provides these
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
 
-  const SignupSubmitHandler = (e: FormEvent) => {
+  const SignupSubmitHandler = async (e: FormEvent) => {
     e.preventDefault();
 
-    // form validation start
+    // ✅ Form validation using Zod
     const result = signupSchema.safeParse(input);
     if (!result.success) {
-      const fieldError = result.error.formErrors.fieldErrors;
-      setErrors(fieldError as Partial<SignupInputState>);
+      const fieldErrors = result.error.formErrors.fieldErrors;
+      setErrors(fieldErrors as Partial<SignupInputState>);
+      return;
     }
-    console.log(input);
+
+    // ✅ Password match validation
+    if (input.password !== input.confirmPassword) {
+      setErrors({ confirmPassword: "Passwords do not match!" });
+      return;
+    }
+
+    // ✅ Signup API call
+    try {
+      await signup(input);
+      toast.success("Signup successful! Please verify your email.");
+      navigate("/verify-email");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Signup failed!");
+    }
   };
 
   const changeEventHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -54,10 +66,8 @@ const Signup = () => {
     }));
   };
 
-  const loading = false;
-
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center min-h-screen">
       <form
         onSubmit={SignupSubmitHandler}
         className="md:p-8 max-w-md bg-white md:border border-gray-200 rounded-lg mx-4 shadow-md"
@@ -66,18 +76,18 @@ const Signup = () => {
           <h1 className="font-bold text-2xl">OrderEase</h1>
         </div>
 
-        {/* FullName Field */}
+        {/* Full Name Field */}
         <div className="relative mb-4">
           <User className="absolute inset-y-0 left-3 w-5 h-5 text-gray-500 my-auto pointer-events-none" />
           <Input
             type="text"
-            placeholder="FullName"
+            placeholder="Full Name"
             name="fullname"
             value={input.fullname}
             onChange={changeEventHandler}
-            className="pl-10 py-5 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="pl-10 py-5 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500"
           />
-          {errors && (
+          {errors.fullname && (
             <span className="text-sm text-red-500">{errors.fullname}</span>
           )}
         </div>
@@ -91,9 +101,9 @@ const Signup = () => {
             name="email"
             value={input.email}
             onChange={changeEventHandler}
-            className="pl-10 py-5 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="pl-10 py-5 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500"
           />
-          {errors && (
+          {errors.email && (
             <span className="text-sm text-red-500">{errors.email}</span>
           )}
         </div>
@@ -107,13 +117,12 @@ const Signup = () => {
             name="password"
             value={input.password}
             onChange={changeEventHandler}
-            className="pl-10 pr-10 py-5 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="pl-10 pr-10 py-5 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute inset-y-0 right-3 flex items-center justify-center text-gray-500 hover:text-gray-700 focus:outline-none"
-            style={{ background: "transparent", border: "none", padding: 0 }}
+            className="absolute inset-y-0 right-3 text-gray-500 focus:outline-none"
           >
             {showPassword ? (
               <EyeOff className="w-5 h-5" />
@@ -121,7 +130,7 @@ const Signup = () => {
               <Eye className="w-5 h-5" />
             )}
           </button>
-          {errors && (
+          {errors.password && (
             <span className="text-sm text-red-500">{errors.password}</span>
           )}
         </div>
@@ -135,13 +144,12 @@ const Signup = () => {
             name="confirmPassword"
             value={input.confirmPassword}
             onChange={changeEventHandler}
-            className="pl-10 pr-10 py-5 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="pl-10 pr-10 py-5 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500"
           />
           <button
             type="button"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute inset-y-0 right-3 flex items-center justify-center text-gray-500 hover:text-gray-700 focus:outline-none"
-            style={{ background: "transparent", border: "none", padding: 0 }}
+            className="absolute inset-y-0 right-3 text-gray-500 focus:outline-none"
           >
             {showConfirmPassword ? (
               <EyeOff className="w-5 h-5" />
@@ -149,20 +157,25 @@ const Signup = () => {
               <Eye className="w-5 h-5" />
             )}
           </button>
+          {errors.confirmPassword && (
+            <span className="text-sm text-red-500">
+              {errors.confirmPassword}
+            </span>
+          )}
         </div>
 
         {/* Contact Field */}
         <div className="relative mb-4">
-          <PhoneCallIcon className="absolute inset-y-0 left-3 w-5 h-5 text-gray-500 my-auto pointer-events-none" />
+          <PhoneOutgoing className="absolute inset-y-0 left-3 w-5 h-5 text-gray-500 my-auto pointer-events-none" />
           <Input
             type="text"
             placeholder="Contact"
             name="contact"
             value={input.contact}
             onChange={changeEventHandler}
-            className="pl-10 py-5 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="pl-10 py-5 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500"
           />
-          {errors && (
+          {errors.contact && (
             <span className="text-sm text-red-500">{errors.contact}</span>
           )}
         </div>
@@ -170,26 +183,23 @@ const Signup = () => {
         {/* Submit Button */}
         <div className="mb-4">
           {loading ? (
-            <button
-              className="w-full bg-rose-500 hover:bg-rose-400 text-white text-lg flex items-center justify-center"
-              disabled
-            >
+            <Button disabled className="w-full bg-rose-500 hover:bg-rose-400">
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Please wait...
-            </button>
+            </Button>
           ) : (
-            <button
+            <Button
               type="submit"
-              className="w-full bg-orange-500 hover:bg-orange-400 text-white text-lg"
+              className="w-full bg-orange-500 hover:bg-orange-400"
             >
               Signup
-            </button>
+            </Button>
           )}
         </div>
 
         <Separator />
         <p className="mt-2">
-          Already have an account
+          Already have an account?
           <Link to="/login" className="text-blue-400">
             {" "}
             Login
