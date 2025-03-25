@@ -72,7 +72,7 @@ const AvailableMenu = ({ addToCart }: AvailableMenuProps) => {
                 <div className="mt-3">
                   <label className="text-sm font-semibold">Select Table:</label>
                   <select
-                    className="ml-2 p-1 border border-gray-300 rounded bg-white"
+                    className="ml-2 p-1 border border-gray-300 rounded"
                     value={selectedTables[item.id] || ""}
                     onChange={(e) =>
                       setSelectedTables((prev) => ({
